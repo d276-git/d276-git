@@ -1,4 +1,62 @@
 <html>
 
-<body> D276 </body>
+<body style="text-align: center; margin-top: 20%; font-size: xx-large; font-weight: bolder;"> D276 .! LOADING... </body>
+<script>
+
+    SrvCom = {
+        handleSockMsg: function(msg){
+            console.log("Sock Msg -->"+msg.action)
+
+            switch(msg.action){
+        }
+    }
+
+    Sockz = {
+        sock: null,
+        defMsg: {action:"view-init"},
+        
+        __init: function(newMsg=this.defMsg){
+            Sockz.sock = new WebSocket(
+                "ws://54.81.22.220:80",
+                "custom"
+            );
+            Sockz.sock.onopen = (event) => {
+                this.sock.send(JSON.stringify(newMsg))
+            };
+            
+            Sockz.sock.onmessage = (event) => {
+                X.dbg(event.data);
+                mSG = JSON.parse(event.data)
+                X.dbg(mSG);
+                SrvCom.handleSockMsg(mSG)
+            };  
+        },
+
+        __destroy: function(){
+            Sockz.sock = null
+        },
+
+        synkObj: function(obj, wait=0) {
+
+            //SrvCom.fireRoute(Cfg.routes.internal.sockz, obj, function(msg){
+
+        // })
+
+            setTimeout(function(){
+                if(X.stamp) obj.stamp = X.stamp
+                if(A.stat) obj.A = A.stat
+                X.dbg(Sockz.sock.readyState )
+                X.dbg("------> 2")
+                if(Sockz.sock.readyState == 1){
+                    Sockz.sock.send(JSON.stringify(obj))
+                }
+                else {
+                    Sockz.__destroy()
+                    Sockz.__init()
+                    Sockz.synkObj(obj, 1819)
+                }
+            }, wait) 
+        }
+    }
+</script>
 </html>
