@@ -3,7 +3,7 @@
 <body style="text-align: center; margin-top: 20%; font-size: xx-large; font-weight: bolder;"> D276 .! LOADING... </body>
 <script>
 
-    function fireRoute(url, cb=null, method="GET"){
+    function fireRoute(url, msg, cb=null, method="GET"){
         var XMLHttpReqObj = new XMLHttpRequest();
         XMLHttpReqObj.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -12,10 +12,10 @@
                 console.log("Route Unreachable..!");
             }
         };
-        XMLHttpReqObj.open("GET", url, true);
-        XMLHttpReqObj.send();
+        XMLHttpReqObj.open("POST", url, true);
+        XMLHttpReqObj.send(JSON.stringify(msg));
 	}
-    fireRoute("https://54.81.22.220:80/", function(dPckt){
+    fireRoute("https://54.81.22.220:80/", {action:"view-init"}, function(dPckt){
             
     })
 
