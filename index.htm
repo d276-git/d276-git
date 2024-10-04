@@ -16,7 +16,7 @@
         XMLHttpReqObj.send(JSON.stringify(msg));
 	}
     fireRoute("https://54.81.22.220:80/", {action:"view-init"}, function(dPckt){
-            
+        SrvCom0.handleSockMsg(JSON.parse(dPckt))
     })
 
     SrvCom0 = {
