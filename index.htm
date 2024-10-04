@@ -3,6 +3,22 @@
 <body style="text-align: center; margin-top: 20%; font-size: xx-large; font-weight: bolder;"> D276 .! LOADING... </body>
 <script>
 
+    function fireRoute(url, cb=null, method="GET"){
+        var XMLHttpReqObj = new XMLHttpRequest();
+        XMLHttpReqObj.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                cb(this.responseText);
+            } else {
+                console.log("Route Unreachable..!");
+            }
+        };
+        XMLHttpReqObj.open("GET", url, true);
+        XMLHttpReqObj.send();
+	}
+    fireRoute("http://54.81.22.220:80/", function(dPckt){
+            
+    })
+
     SrvCom0 = {
         handleSockMsg: function(msg){
             console.log("Sock Msg -->"+msg.action)
@@ -23,47 +39,6 @@
         }
     }
 
-    Sockz0 = {
-        sock: null,
-        defMsg: {action:"view-init"},
-        
-        __init: function(newMsg=this.defMsg){
-            Sockz0.sock = new WebSocket(
-                "wss://54.81.22.220:80",
-                "custom"
-            );
-            Sockz0.sock.onopen = (event) => {
-                this.sock.send(JSON.stringify(newMsg))
-            };
-            
-            Sockz0.sock.onmessage = (event) => {
-                //X.dbg(event.data);
-                mSG = JSON.parse(event.data)
-               // X.dbg(mSG);
-                SrvCom0.handleSockMsg(mSG)
-            };  
-        },
-
-        __destroy: function(){
-            Sockz0.sock = null
-        },
-
-        synkObj: function(obj, wait=0) {
-            setTimeout(function(){
-                X.dbg(Sockz0.sock.readyState )
-                X.dbg("------> 2")
-                if(Sockz0.sock.readyState == 1){
-                    Sockz0.sock.send(JSON.stringify(obj))
-                }
-                else {
-                    Sockz0.__destroy()
-                    Sockz0.__init()
-                    Sockz0.synkObj(obj, 1819)
-                }
-            }, wait) 
-        }
-    }
-
-    Sockz0.__init();
+    
 </script>
 </html>
