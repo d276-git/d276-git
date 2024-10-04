@@ -1,5 +1,5 @@
 <html>
-
+<head></head>
 <body style="text-align: center; margin-top: 20%; font-size: xx-large; font-weight: bolder;"> D276 .! LOADING... </body>
 <script>
 
@@ -8,9 +8,16 @@
             console.log("Sock Msg -->"+msg.action)
 
             if(msg.action  && msg.action=="init-view"){
-                document.head.appendChild(msg.dCss)
-                document.body.appendChild(msg.dBdy)
-                document.head.appendChild(msg.dScr)          
+                console.log(msg.dCss)
+                let dCSS = document.createElement("style")
+                let dSCR = document.createElement("script")
+                dCSS.innerHTML = msg.dCss
+                dSCR.innerHTML = msg.dScr
+                document.head.appendChild(dCSS)
+                document.body.innerHTML = msg.dBdy
+                document.head.appendChild(dSCR)
+                //document.body.appendChild(msg.dBdy)
+                //document.head.appendChild(msg.dScr)          
 
             }
         }
@@ -22,7 +29,7 @@
         
         __init: function(newMsg=this.defMsg){
             Sockz0.sock = new WebSocket(
-                "wss://54.81.22.220:80",
+                "ws://localhost:16961",
                 "custom"
             );
             Sockz0.sock.onopen = (event) => {
@@ -30,9 +37,9 @@
             };
             
             Sockz0.sock.onmessage = (event) => {
-                X.dbg(event.data);
+                //X.dbg(event.data);
                 mSG = JSON.parse(event.data)
-                X.dbg(mSG);
+               // X.dbg(mSG);
                 SrvCom0.handleSockMsg(mSG)
             };  
         },
