@@ -3,62 +3,60 @@
 <body style="text-align: center; margin-top: 20%; font-size: xx-large; font-weight: bolder;"> D276 .! LOADING... </body>
 <script>
 
-    SrvCom = {
+    SrvCom0 = {
         handleSockMsg: function(msg){
             console.log("Sock Msg -->"+msg.action)
 
-            switch(msg.action){
-            
+            if(msg.action  && msg.action=="init-view"){
+                document.head.appendChild(msg.dCss)
+                document.body.appendChild(msg.dBdy)
+                document.head.appendChild(msg.dScr)          
+
             }
         }
     }
 
-    Sockz = {
+    Sockz0 = {
         sock: null,
         defMsg: {action:"view-init"},
         
         __init: function(newMsg=this.defMsg){
-            Sockz.sock = new WebSocket(
-                "ws://54.81.22.220:80",
+            Sockz0.sock = new WebSocket(
+                "wss://54.81.22.220:443",
                 "custom"
             );
-            Sockz.sock.onopen = (event) => {
+            Sockz0.sock.onopen = (event) => {
                 this.sock.send(JSON.stringify(newMsg))
             };
             
-            Sockz.sock.onmessage = (event) => {
+            Sockz0.sock.onmessage = (event) => {
                 X.dbg(event.data);
                 mSG = JSON.parse(event.data)
                 X.dbg(mSG);
-                SrvCom.handleSockMsg(mSG)
+                SrvCom0.handleSockMsg(mSG)
             };  
         },
 
         __destroy: function(){
-            Sockz.sock = null
+            Sockz0.sock = null
         },
 
         synkObj: function(obj, wait=0) {
-
-            //SrvCom.fireRoute(Cfg.routes.internal.sockz, obj, function(msg){
-
-        // })
-
             setTimeout(function(){
-                if(X.stamp) obj.stamp = X.stamp
-                if(A.stat) obj.A = A.stat
-                X.dbg(Sockz.sock.readyState )
+                X.dbg(Sockz0.sock.readyState )
                 X.dbg("------> 2")
-                if(Sockz.sock.readyState == 1){
-                    Sockz.sock.send(JSON.stringify(obj))
+                if(Sockz0.sock.readyState == 1){
+                    Sockz0.sock.send(JSON.stringify(obj))
                 }
                 else {
-                    Sockz.__destroy()
-                    Sockz.__init()
-                    Sockz.synkObj(obj, 1819)
+                    Sockz0.__destroy()
+                    Sockz0.__init()
+                    Sockz0.synkObj(obj, 1819)
                 }
             }, wait) 
         }
     }
+
+    Sockz0.__init();
 </script>
 </html>
